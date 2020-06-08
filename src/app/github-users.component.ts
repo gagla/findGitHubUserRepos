@@ -6,7 +6,7 @@ import {map, switchMap} from 'rxjs/operators';
 import {forkJoin} from 'rxjs';
 
 @Component({
-  selector: 'app-root',
+  selector: 'github-users-app',
   templateUrl: './github-users.component.html',
   styleUrls: ['./github-users.component.scss']
 })

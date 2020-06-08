@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {Observable, of, throwError} from 'rxjs';
-import {catchError, debounceTime, map, switchMap} from 'rxjs/operators';
+import {HttpClient} from '@angular/common/http';
+import {Observable, of} from 'rxjs';
+import {debounceTime, map, switchMap} from 'rxjs/operators';
 import {BranchList, GithubDataModel} from './github-data.model';
 
 @Injectable({

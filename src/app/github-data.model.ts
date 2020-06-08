@@ -1,7 +1,7 @@
 export interface GithubDataModel {
   name: string;
   owner: Owner;
-  fork?: boolean;
+  fork: boolean;
   branchList?: BranchList[];
 }
 
@@ -11,5 +11,5 @@ export interface BranchList {
 }
 
 export interface Owner {
-  login?: string;
+  login: string;
 }

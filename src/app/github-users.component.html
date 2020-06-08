@@ -12,7 +12,7 @@
       <div class="branches-wrapper">
         <div *ngFor="let branch of userReposData.branchList">
           <div class="data-row"><i class="fas fa-code-branch"></i><span class="data-label">Branch: </span>{{branch?.name}}</div>
-          <div class="data-row"><i class="fas fa-code"></i><span class="data-label">BLast commit: </span>{{branch?.commit?.sha}}</div>
+          <div class="data-row"><i class="fas fa-code"></i><span class="data-label">Last commit: </span>{{branch?.commit?.sha}}</div>
         </div>
       </div>
     </ng-container>

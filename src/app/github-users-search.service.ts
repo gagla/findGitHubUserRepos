@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable, of} from 'rxjs';
+import {forkJoin, Observable, of} from 'rxjs';
 import {debounceTime, map, switchMap} from 'rxjs/operators';
 import {BranchList, GithubDataModel} from './github-data.model';
 
@@ -31,5 +31,22 @@ export class GithubService {
         }
         return this.getRepos(searchTerm);
       }));
+  }
+
+  getGitHubData(user$: Observable<string>): Observable<GithubDataModel[]> {
+    return this.serachUsers(user$).pipe(
+      switchMap((result: GithubDataModel[]) => {
+          const reposObs$ = result.map(repo => this.getBranches(repo.owner.login, repo.name));
+          return forkJoin(reposObs$).pipe(map(branches =>
+            branches.map((branchList, index) => {
+              return {
+                ...result[index],
+                branchList: branchList
+              }
+            })
+          ))
+        }
+      )
+    )
   }
 }

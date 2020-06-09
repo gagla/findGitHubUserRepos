@@ -1,25 +1,39 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {GithubService} from './github-users-search.service';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {GithubDataModel} from './github-data.model';
+import {BranchList, GithubDataModel} from './github-data.model';
+import {Subscription} from 'rxjs';
+import {switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'github-users-app',
   templateUrl: './github-users.component.html',
   styleUrls: ['./github-users.component.scss']
 })
-export class GithubUsersComponent implements OnInit {
-  searchField: FormControl;
-  githubUsersSearchForm: FormGroup;
-  githubData: GithubDataModel[];
+export class GithubUsersComponent implements OnInit, OnDestroy {
 
-  constructor(private githubService: GithubService, private fb: FormBuilder) {
+  githubData: GithubDataModel[];
+  subscription: Subscription;
+
+  constructor(private githubService: GithubService) {
   }
 
   ngOnInit() {
-    this.searchField = new FormControl('', [Validators.required]);
-    this.githubUsersSearchForm = this.fb.group({search: this.searchField});
-    this.githubService.getGitHubData(this.searchField.valueChanges)
-      .subscribe(res => this.githubData = res);
+    this.subscription = this.githubService.getSearchTerm().pipe(
+      switchMap(searchTerm =>
+        this.githubService.getGitHubData(searchTerm)
+      )
+    ).subscribe(data => this.githubData = data)
+  }
+
+  trackByFnRepos(index: number, item: GithubDataModel) {
+    return index;
+  }
+
+  trackByFnBranches(index: number, item: BranchList) {
+    return index;
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

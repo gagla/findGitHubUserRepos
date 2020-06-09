@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {forkJoin, Observable, of} from 'rxjs';
-import {debounceTime, map, switchMap} from 'rxjs/operators';
+import {forkJoin, Observable, of, ReplaySubject, Subject} from 'rxjs';
+import {debounceTime, distinctUntilChanged, map, switchMap} from 'rxjs/operators';
 import {BranchList, GithubDataModel} from './github-data.model';
 
 @Injectable({
@@ -9,22 +9,27 @@ import {BranchList, GithubDataModel} from './github-data.model';
 })
 export class GithubService {
 
+  private searchTermSub$: Subject<Observable<string>> = new Subject<Observable<string>>();
+
   constructor(private _http: HttpClient) {
   }
 
-  getRepos(user): Observable<GithubDataModel[]> {
+  getRepos(user: string): Observable<GithubDataModel[]> {
+    console.log('here')
     return this._http.get<GithubDataModel[]>('https://api.github.com/users/' + user + '/repos').pipe(
       map(items => items.filter(item => item.fork === false))
     );
   }
 
-  getBranches(user, repoName): Observable<BranchList[]> {
+  getBranches(user: string, repoName: string): Observable<BranchList[]> {
     return this._http.get<BranchList[]>('https://api.github.com/repos/' + user + '/' + repoName + '/branches');
   }
 
   serachUsers(user$: Observable<string>): Observable<GithubDataModel[]> {
+    console.log('here')
     return user$.pipe(
       debounceTime(500),
+      distinctUntilChanged(),
       switchMap(searchTerm => {
         if (!searchTerm) {
           return of([]);
@@ -33,7 +38,16 @@ export class GithubService {
       }));
   }
 
+  setSearchTerm(searchTerm: Observable<string>): void {
+    this.searchTermSub$.next(searchTerm);
+  }
+
+  getSearchTerm(): Observable<any> {
+    return this.searchTermSub$.asObservable();
+  }
+
   getGitHubData(user$: Observable<string>): Observable<GithubDataModel[]> {
+    console.log('here')
     return this.serachUsers(user$).pipe(
       switchMap((result: GithubDataModel[]) => {
           const reposObs$ = result.map(repo => this.getBranches(repo.owner.login, repo.name));

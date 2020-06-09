@@ -1,0 +1,6 @@
+<form [formGroup]="githubUsersSearchForm">
+  <input formControlName="search" class="search-user-input"
+         placeholder="Search for GitHub users repos">
+  <span class="validation-message"
+        *ngIf="!searchField.valid && searchField.touched">Please enter a GitHub username</span>
+</form>

@@ -1,25 +1,21 @@
-<form [formGroup]="githubUsersSearchForm">
-  <input formControlName="search" class="search-user-input"
-         placeholder="Search for GitHub users repos">
-  <span class="validation-message"
-        *ngIf="!searchField.valid && searchField.touched">Please enter a GitHub username</span>
-</form>
-<ng-container *ngIf="githubData">
-  <div *ngFor="let userReposData of githubData" class="repos-data">
-    <div class="data-row"><span class="data-label main">Repository: {{userReposData?.name}}</span></div>
-    <div class="data-row"><i class="fas fa-user"></i><span class="data-label">Owner: </span>{{userReposData?.owner?.login}}</div>
-    <ng-container *ngIf="userReposData.branchList.length > 0; else noDataTemplate">
-      <div class="branches-wrapper">
-        <div *ngFor="let branch of userReposData.branchList">
-          <div class="data-row"><i class="fas fa-code-branch"></i><span class="data-label">Branch: </span>{{branch?.name}}</div>
-          <div class="data-row"><i class="fas fa-code"></i><span class="data-label">Last commit: </span>{{branch?.commit?.sha}}</div>
+<github-users-search-form></github-users-search-form>
+<div *ngFor="let userReposData of githubData; trackBy: trackByFnRepos" class="repos-data">
+  <div class="data-row"><span class="data-label main">Repository: {{userReposData?.name}}</span></div>
+  <div class="data-row"><i class="fas fa-user"></i><span
+    class="data-label">Owner: </span>{{userReposData?.owner?.login}}</div>
+  <ng-container *ngIf="userReposData.branchList.length > 0; else noDataTemplate">
+    <div class="branches-wrapper">
+      <div *ngFor="let branch of userReposData.branchList; trackBy: trackByFnBranches">
+        <div class="data-row"><i class="fas fa-code-branch"></i><span class="data-label">Branch: </span>{{branch?.name}}
         </div>
+        <div class="data-row"><i class="fas fa-code"></i><span
+          class="data-label">Last commit: </span>{{branch?.commit?.sha}}</div>
       </div>
-    </ng-container>
-    <ng-template #noDataTemplate>
-      <div>
-        No user branches/data found
-      </div>
-    </ng-template>
-  </div>
-</ng-container>
+    </div>
+  </ng-container>
+  <ng-template #noDataTemplate>
+    <div>
+      No user branches/data found
+    </div>
+  </ng-template>
+</div>

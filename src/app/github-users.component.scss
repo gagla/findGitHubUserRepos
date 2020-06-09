@@ -1,48 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
-
-$text-color: #252525;
-$border-red: #ff0000;
-$medium-gray: #737373;
-$light-gray: #bebebe;
-$very-light-gray: #c5c5c5;
-
-form {
-  margin-top: 25px;
-  min-width: 300px;
-  .search-user-input {
-    width: 100%;
-    padding: 15px;
-    font-size: 18px;
-    border: 2px solid $very-light-gray;
-    border-radius: 8px;
-    outline: none;
-    transition: 0.2s;
-
-    &.ng-invalid.ng-touched {
-      border: 2px solid $border-red;
-    }
-  }
-  .search-user-input :focus {
-    box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.12);
-    &::placeholder {
-      color: transparent;
-    }
-  }
-  input[type="text"] {
-    color: $text-color;
-  }
-
-  ::placeholder {
-    color: $light-gray;
-  }
-
-  .validation-message {
-    display: block;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    color: $medium-gray;
-  }
-}
+@import 'common/_variables';
 
 .repos-data {
   margin-top: 10px;

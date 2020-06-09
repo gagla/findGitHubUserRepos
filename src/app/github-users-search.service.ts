@@ -15,7 +15,6 @@ export class GithubService {
   }
 
   getRepos(user: string): Observable<GithubDataModel[]> {
-    console.log('here')
     return this._http.get<GithubDataModel[]>('https://api.github.com/users/' + user + '/repos').pipe(
       map(items => items.filter(item => item.fork === false))
     );
@@ -26,7 +25,6 @@ export class GithubService {
   }
 
   serachUsers(user$: Observable<string>): Observable<GithubDataModel[]> {
-    console.log('here')
     return user$.pipe(
       debounceTime(500),
       distinctUntilChanged(),
@@ -47,7 +45,6 @@ export class GithubService {
   }
 
   getGitHubData(user$: Observable<string>): Observable<GithubDataModel[]> {
-    console.log('here')
     return this.serachUsers(user$).pipe(
       switchMap((result: GithubDataModel[]) => {
           const reposObs$ = result.map(repo => this.getBranches(repo.owner.login, repo.name));

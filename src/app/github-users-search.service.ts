@@ -9,7 +9,7 @@ import {BranchList, GithubDataModel} from './github-data.model';
 })
 export class GithubService {
 
-  private searchTermSub$: Subject<Observable<string>> = new Subject<Observable<string>>();
+  private searchTermSub$: ReplaySubject<Observable<string>> = new ReplaySubject<Observable<string>>(1);
 
   constructor(private _http: HttpClient) {
   }
